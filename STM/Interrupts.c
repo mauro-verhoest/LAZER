@@ -19,9 +19,9 @@
 
 int counter = 0;
 
-void init_interrupts(void(*a)(), void(*b)())
+void init_interrupts(void(*a)(), void(*b)(), void(*c)())
 {
-	init_GPIO(*a, *b);
+	init_GPIO(*a, *b, *c);
 }
 
 

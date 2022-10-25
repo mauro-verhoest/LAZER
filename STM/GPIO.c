@@ -13,6 +13,7 @@ uint8_t trigger = 0;
 
 void (*nextStruct1)();
 void (*nextStruct2)();
+void (*nextStruct3)();
 
 void EINT3_IRQHandler() {
 
@@ -26,20 +27,28 @@ void EINT3_IRQHandler() {
 		LPC_GPIOINT->IO0IntClr = (1 << 4);
 		nextStruct1();
 	}
+	else if(((LPC_GPIOINT->IO0IntStatF >> 5) & 1) == 1){	// Mauser FIX
+		LPC_GPIOINT->IO0IntClr = (1 << 5);
+		nextStruct3();
+	}
 
 }
 
-void init_GPIO(void(*a)(), void(*b)()) {
+void init_GPIO(void(*a)(), void(*b)(), void(*c)()) {
 
 	//if a FIOPIN register is read, its bit(s) masked with 1 in the FIOMASK register will be set to 0
 	//regardless of the physical pin state
 	LPC_GPIO0->FIOMASK = 0xFFFFFFFF;
-	LPC_GPIO0->FIOMASK &= ~(1 << 16);
+	LPC_GPIO0->FIOMASK &= ~(1<<16);
 	LPC_GPIO0->FIOMASK &= ~(1<<4);
 
-	LPC_GPIO0->FIODIR &= ~(1 << 4);
-	LPC_PINCON->PINMODE0 |=(3<< 8);
-	LPC_GPIOINT->IO0IntEnR |= (1 << 4); //enable GPIO interrupt for p0.30 rising edge
+	LPC_GPIO0->FIODIR &= ~(1<<4);
+	LPC_PINCON->PINMODE0 |=(3<<8);
+	LPC_GPIOINT->IO0IntEnR |= (1<<4); //enable GPIO interrupt for p0.30 rising edge
+
+	LPC_GPIO0->FIOMASK &= ~(1<<5);
+	LPC_GPIO0->FIODIR &= ~(1<<5);
+	LPC_GPIOINT->IO0IntEnF |= (1<<5);
 
     //CENTER
 	LPC_GPIO0->FIODIR &= ~(1 << 16); 		//select p0.16 (JOYSTICK CENTER) and write 0 to make it an input
@@ -52,6 +61,7 @@ void init_GPIO(void(*a)(), void(*b)()) {
 
 	nextStruct1 = a;
 	nextStruct2 = b;
+	nextStruct3 = c;
 }
 
 /*

@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include "Interrupts.h"
-
+#include "lcd.h"
 
 struct state;
 typedef void states(struct state *);
@@ -19,31 +19,33 @@ struct state
 	int Healt;
 };
 
-states shoot_state, hit_state, hitby_state, reload_state;
+states shoot_state, hit_state, reload_state;
 
 void shoot_state(struct state * state)
 {
 	printf("PIEUW \n");
+	dispString(1,0,"SHOOT!");
+
 }
 
 void hit_state(struct state * state)			// Software interrupt
 {
 	printf("YES \n");
-}
-
-void hitby_state(struct state * state)			// Software interrupt
-{
-	printf("GERAAKT! \n");
+	dispString(1,0,"HIT!");
 }
 
 void reload_state(struct state * state)
 {
 	printf("RELOAD! \n");
+	dispString(1,0,"RELOAD!");
 }
 
 int main(void)
 {
-	init_interrupts(*shoot_state, *reload_state);
+	lcdInit();
+	lcdReset();
+
+	init_interrupts(*shoot_state, *reload_state, *hit_state);
 
 	return 0;
 }

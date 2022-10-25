@@ -8,7 +8,7 @@
 #ifndef INTERRUPTS_H_
 #define INTERRUPTS_H_
 
-void init_interrupts(void(*a)(), void(*b)());
+void init_interrupts(void(*a)(), void(*b)(), void(*c)());
 
 
 #endif /* INTERRUPTS_H_ */

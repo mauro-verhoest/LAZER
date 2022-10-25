@@ -16,7 +16,7 @@
 /* ^^ these are the include guards */
 
 /* Prototypes for the functions */
-void init_GPIO(void(*a)(), void(*b)());
+void init_GPIO(void(*a)(), void(*b)(), void(*c)());
 void approx_wait(uint32_t milliseconds);
 void toggleLED(uint8_t control,uint8_t reg);
 
